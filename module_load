@@ -1,0 +1,32 @@
+        # This file is a part of Ip6wall.
+	# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+	# See Changelog for a list of changes.
+	# See COPYRIGHT for copyright infos.
+	# See INSTALL for installation infos.
+	# See LICENCE for license infos.
+
+	###########################################################################
+        #
+        # 2. Module loading.
+        #
+        #
+        # Needed to initially load modules
+        #/sbin/depmod -a
+        #
+        #
+        # Adds some iptables targets like LOG, REJECT and MASQUARADE.
+        #
+        /sbin/modprobe ipt_LOG
+        #/sbin/modprobe ipt_REJECT
+
+        #
+        # Support for owner matching
+        #
+        #/sbin/modprobe ipt_owner
+
+        #
+        # Support for connection tracking of FTP and IRC.
+        #
+        #/sbin/modprobe ip_conntrack_ftp
+        #/sbin/modprobe ip_conntrack_irc
+

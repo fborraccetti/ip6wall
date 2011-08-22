@@ -1,0 +1,37 @@
+        # This file is a part of Ip6wall.
+	# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+	# See Changelog for a list of changes.
+	# See COPYRIGHT for copyright infos.
+	# See INSTALL for installation infos.
+	# See LICENCE for license infos.
+
+	echo -n "Stopping $VERSION ..."
+
+
+        ###############################################################################
+        #
+        # Flush Any Existing Rules or Chains
+        #
+
+
+        #echo "Flushing Tables ..."
+
+        # Reset Default Policies
+
+        $IPT -P INPUT ACCEPT
+        $IPT -P FORWARD ACCEPT
+        $IPT -P OUTPUT ACCEPT
+
+        # Flush all rules
+        $IPT -F
+        $IPT -F INPUT
+        $IPT -F OUTPUT
+        $IPT -F FORWARD
+        $IPT -F -t mangle
+
+        # Erase all non-default chains
+        $IPT -X
+        $IPT -t mangle -X
+
+        echo "done"
+

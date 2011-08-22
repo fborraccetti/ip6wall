@@ -1,0 +1,63 @@
+# This file is a part of Ip6wall.
+# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+# See Changelog for a list of changes.
+# See COPYRIGHT for copyright infos.
+# See INSTALL for installation infos.
+# See LICENCE for license infos.
+
+	# udp_inbound chain
+        #
+        # This chain describes the inbound UDP packets it will accept.
+        # It's applied to INPUT on the external or Internet interface.
+        # Note that the stateful settings allow replies.
+        # These rules are for new requests.
+        # It drops netbios packets (windows) immediately without logging.
+
+        # Drop netbios calls
+        # Please note that these rules do not really change the way the firewall
+        # treats netbios connections.  Connections from the localhost and
+        # internal interface (if one exists) are accepted by default.
+        # Responses from the Internet to requests initiated by or through
+        # the firewall are also accepted by default.  To get here, the
+        # packets would have to be part of a new request received by the
+        # Internet interface.  You would have to manually add rules to
+        # accept these.  I added these rules because some network connections,
+        # such as those via cable modems, tend to be filled with noise from
+        # unprotected Windows machines.  These rules drop those packets
+        # quickly and without logging them.  This prevents them from traversing
+        # the whole chain and keeps the log from getting cluttered with
+        # chatter from Windows systems.
+        #echo -n "Rules to manage udp traffic ..."
+        #echo "Rules to Drop udp netbios calls"
+        #$IPT -A udp_inbound -p UDP -s 0/0 --destination-port 137 -j DROP
+        #$IPT -A udp_inbound -p UDP -s 0/0 --destination-port 138 -j DROP
+
+        # DNS Server
+        # Configure the server to use port 53 as the source port for requests
+        # Note, if you run a caching-only name server that only accepts queries
+        # from the private network or localhost, you can comment out this line.
+        #echo "Rules to Accept DNS input traffic"
+
+        echo -n "Enablig UDP traffic for: "
+        for x in $UDP_PORTS
+        do
+                echo -n " $x ,"
+            $IPT -A udp_inbound -p UDP -s 0/0 --destination-port $x -j ACCEPT
+        done
+        echo done
+
+        #$IPT -A udp_inbound -p UDP -s 0/0 --destination-port 53 -j ACCEPT
+        #$IPT -A udp_inbound -p UDP -s 0/0 --destination-port 53 -d $ns2 -j ACCEPT
+
+        # If you don't query-source the server to port 53 and you have problems,
+        # uncomment this rule.  It specifically allows responses to queries
+        # initiated to another server from a high UDP port.  The stateful
+        # connection rules should handle this situation, though.
+        #echo "Rules to Accept traffic from port 53"
+        #$IPT -A udp_inbound -p UDP -s 0/0 --source-port 53 -j ACCEPT
+
+
+        # Not matched, so return for logging
+        $IPT -A udp_inbound -p UDP -j RETURN
+
+

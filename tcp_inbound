@@ -1,0 +1,37 @@
+        # This file is a part of Ip6wall.
+	# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+	# See Changelog for a list of changes.
+	# See COPYRIGHT for copyright infos.
+	# See INSTALL for installation infos.
+	# See LICENCE for license infos.
+
+	# tcp_inbound chain
+        #
+        # This chain is used to allow inbound connections to the
+        # system/gateway.  Use with care.  It defaults to none.
+        # It's applied on INPUT from the external or Internet interface.
+
+
+        # DNS Server - Allow TCP connections (zone transfers and large requests)
+        # This is disabled by default.  DNS Zone transfers occur via TCP.
+        # If you need to allow transfers over the net you need to uncomment this line.
+        # If you allow queries from the 'net, you also need to be aware that although
+        # DNS queries use UDP by default, a truncated UDP query can legally be
+        # submitted via TCP instead.  You probably will never need it, but should
+        # be aware of the fact.
+        # $IPT -A tcp_inbound -p TCP -s 0/0 --destination-port 53 -j ACCEPT
+
+        echo -n "Enablig TCP traffic for: "
+        for x in $TCP_PORTS
+        do
+                echo -n " $x ,"
+        $IPT -A tcp_inbound -p TCP -s 0/0 --destination-port $x -j ACCEPT
+        done
+        echo done
+	if [ "$AUTH_RESET" = "YES" ]; then
+		echo -n "reject all auth (113) request: "
+		$IPT -A tcp_inbound -p TCP -s 0/0 --destination-port 113 -j REJECT
+		echo done
+	fi
+	$IPT -A tcp_inbound -p TCP -j RETURN
+

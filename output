@@ -1,0 +1,37 @@
+        # This file is a part of Ip6wall.
+	# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+	# See Changelog for a list of changes.
+	# See COPYRIGHT for copyright infos.
+	# See INSTALL for installation infos.
+	# See LICENCE for license infos.
+
+	###############################################################################
+        #
+        # OUTPUT Chain
+        #
+
+        echo -n "Process OUTPUT chain ..."
+
+        # Generally trust the firewall on output
+
+        # However, invalid icmp packets need to be dropped
+        # to prevent a possible exploit.
+        #echo "Rules to DROP icmp INVALID OUTPUT traffic"
+        #$IPT -A OUTPUT -m state -p icmp --state INVALID -j DROP
+
+        # Localhost
+        #echo "Rules to Accept OUTPUT LO traffic"
+        $IPT -A OUTPUT -p ALL -s $LO_IP -j ACCEPT
+        $IPT -A OUTPUT -p ALL -o $LO_IFACE -j ACCEPT
+
+        # To internet
+        #echo "Rules to Accept OUTPUT traffic"
+        $IPT -A OUTPUT -p ALL -o $INET_IFACE -j ACCEPT
+        #$IPT -A OUTPUT -p ALL -d $LAN_NET -j ACCEPT
+
+        # Log packets that still don't match
+        #echo "Rules to Accept LOG OUTPUT DROP traffic"
+        $IPT -A OUTPUT -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP OUTPUT "
+
+        echo done
+

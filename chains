@@ -1,0 +1,33 @@
+        # This file is a part of Ip6wall.
+	# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+	# See Changelog for a list of changes.
+	# See COPYRIGHT for copyright infos.
+	# See INSTALL for installation infos.
+	# See LICENCE for license infos.
+
+	###############################################################################
+        #
+        # User-Specified Chains
+        #
+        # Create user chains to reduce the number of rules each packet
+        # must traverse.
+        echo -n "Create custom rule chains ... "
+        #echo  "Create a chain to filter INVALID packets"
+        $IPT -N bad_packets
+        #echo "Create another chain to filter bad tcp packets"
+        $IPT -N bad_tcp_packets
+        #echo "Create separate chains for icmp, tcp (incoming and outgoing),and incoming udp packets."
+        $IPT -N icmp_packets
+        #echo "Create chain for UDP packets inbound from the Internet"
+        $IPT -N udp_inbound
+        #echo "Create chain outbound UDP services from internal network"
+        # Default to allow all
+        $IPT -N udp_outbound
+        #echo "Create chain for inbound services if desired"
+        # Default fail except for established sessions
+        $IPT -N tcp_inbound
+	#echo "Create chain for block outbound services from internal network"
+        # Default to allow all
+        $IPT -N tcp_outbound
+        echo "done"
+

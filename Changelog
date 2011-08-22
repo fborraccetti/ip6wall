@@ -1,0 +1,45 @@
+v1.0	
+	* Completly rewritten
+	* Added many comment
+	* Major code cleanup
+	* Changed configuration files and options
+	* Started Beta testing
+v0.6
+	* Added information of copyright
+	* Fixed bugs of "#" in conf/ircservers
+	* Changed if [ -n var ]; into if [ $var != ""];
+	* Minor code cleanup
+	* version 0.5.9 Released to freshmeat.net
+	* Added docs directory even if some files
+	* weren't complete, like readme and usage
+
+v0.5
+	* Fixed some little bugs about 
+	* parsing conf files
+	* added section to manage traffic of ircservers
+	* Because ip6tables don't support --state
+	* option ( for now i hope )
+
+v0.4	
+	* Added support for net forwarding,
+	* Now ip6wall accept traffic from/to lan
+	* and can forward it to the internet.
+	* Rewritten sourced/services.rules 
+	* to make work public services.
+	* Removed NAT section of gShield
+
+v0.2
+	* Remove part of gShield code that don't
+	* work with ip6tables. 
+	* For example option implemented for iptables
+	* but not for ip6tables
+
+v0.1
+	* Start with substitution of:
+	* s/iptables/ip6tables
+	* s/gShield/ip6wall
+	* and other
+
+v0.0
+	* For now exist only the idea to change
+	* to make it working with ipv6

@@ -1,0 +1,43 @@
+# This file is a part of Ip6wall.
+# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+# See Changelog for a list of changes.
+# See COPYRIGHT for copyright infos.
+# See INSTALL for installation infos.
+# See LICENCE for license infos.
+#
+#        bad_tcp_packets chain
+        #
+        # All tcp packets will traverse this chain.
+        # Every new connection attempt should begin with
+        # a syn packet.  If it doesn't, it is likely a
+        # port scan.  This drops packets in state
+        # NEW that are not flagged as syn packets.
+	
+        #echo "Rules to Drop tcp new not syn"
+        #$IPT -A bad_tcp_packets -p tcp ! --syn -m state --state NEW -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP New not syn "
+        #$IPT -A bad_tcp_packets -p tcp ! --syn -m state --state NEW -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags ALL NONE"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL NONE -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 1 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL NONE -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags ALL ALL"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL ALL -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 2 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL ALL -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags ALL FIN,URG,PSH"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL FIN,URG,PSH -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 3 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL FIN,URG,PSH -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags ALL SYN,RST,ACK,FIN,URG"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 4 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags ALL SYN,RST,ACK,FIN,URG -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags SYN,RST SYN,RST"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags SYN,RST SYN,RST  -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 5 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+        #echo "Rules to Drop tcp Bad tcp packets flags SYN,FIN SYN,FIN"
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags SYN,FIN SYN,FIN  -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP Bad tcp packets 6 "
+        $IPT -A bad_tcp_packets -p tcp --tcp-flags SYN,FIN SYN,FIN -j DROP
+
+
+
+        # All good, so return
+        $IPT -A bad_tcp_packets -p tcp -j RETURN
+        #echo "done"
+

@@ -1,0 +1,1 @@
+#iptables -t nat -A PREROUTING -i ppp0 -p tcp --dport 3389 -j DNAT --to-destination 192.168.1.4

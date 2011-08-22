@@ -1,0 +1,19 @@
+# This file is a part of Ip6wall.
+# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+# See Changelog for a list of changes.
+# See COPYRIGHT for copyright infos.
+# See INSTALL for installation infos.
+# See LICENCE for license infos.
+
+        ###########################################################################
+        #
+        # 3. /proc set up.
+        #
+        # Enable ip_forward if you have two or more networks, including the
+        # Internet, that needs forwarding of packets through this box. This is
+        # critical since it is turned off as default in Linux.
+        #
+        if [ "$LAN" = "YES" ]; then
+                echo "1" > /proc/sys/net/ipv6/conf/all/forwarding
+        fi
+

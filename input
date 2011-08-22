@@ -1,0 +1,51 @@
+       # This file is a part of Ip6wall.
+       # Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+       # See Changelog for a list of changes.
+       # See COPYRIGHT for copyright infos.
+       # See INSTALL for installation infos.
+       # See LICENCE for license infos.
+
+	###############################################################################
+        #
+        # INPUT Chain
+        #
+
+        echo -n "Process INPUT chain ..."
+
+        # Allow all on localhost interface
+        #echo "Rules to Accept INPUT LO traffic"
+        $IPT -A INPUT -p ALL -i $LO_IFACE -j ACCEPT
+
+        # Drop bad packets
+        $IPT -A INPUT -p ALL -j bad_packets
+
+        #$IPT -A INPUT -p ALL -d 224.0.0.1 -j DROP
+        # The rule to accept the packets.
+        # $IPT -A INPUT -p ALL -d 224.0.0.1 -j ACCEPT
+# Inbound Internet Packet Rules
+
+        # Accept Established Connections
+        #echo "Rules to Accept ESTABLISHED traffic"
+
+        $IPT -A INPUT -p ALL -i $INET_IFACE -m state --state ESTABLISHED,RELATED -j ACCEPT
+        $IPT -A INPUT -p ALL -i $LAN_IFACE -m state --state ESTABLISHED,RELATED -j ACCEPT
+        $IPT -A INPUT -p ALL -i $LAN_IFACE -j ACCEPT
+        # Route the rest to the appropriate user chain
+        #echo "Rules to deliver traffic to appropriate chain"
+        $IPT -A INPUT -p TCP -i $INET_IFACE -j tcp_inbound
+        $IPT -A INPUT -p UDP -i $INET_IFACE -j udp_inbound
+	$IPT -A INPUT -p ICMP -i $INET_IFACE -j icmp_packets
+	$IPT -A INPUT -p ICMPv6 -i $INET_IFACE -j icmp_packets
+
+
+        # Drop without logging broadcasts that get this far.
+        # Cuts down on log clutter.
+        # Comment this line if testing new rules that impact
+        # broadcast protocols.
+        #$IPT -A INPUT -m pkttype --pkt-type broadcast -j DROP
+
+        # Log packets that still don't match
+        #echo "Rules to Log INPUT DROP traffic"
+        $IPT -A INPUT -m limit --limit 3/minute --limit-burst 3 -j LOG --log-prefix "DROP INPUT "
+        echo done
+

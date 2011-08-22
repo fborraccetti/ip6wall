@@ -1,0 +1,18 @@
+# This file is a part of Ip6wall.
+# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+# See Changelog for a list of changes.
+# See COPYRIGHT for copyright infos.
+# See INSTALL for installation infos.
+# See LICENCE for license infos.
+#
+# tcp_outbound chain
+        #
+        # This chain is used with a private network to prevent forwarding for
+        # requests on specific protocols.  Applied to the FORWARD rule from
+        # the internal network.  Ends with an ACCEPT
+
+        #echo -n "Rules to manage TCP traffic ..."
+        # No match, so ACCEPT
+        #echo "Rules to Accept TCP traffic"
+        $IPT -A tcp_outbound -p TCP -s 0/0 -j ACCEPT
+        #echo done
