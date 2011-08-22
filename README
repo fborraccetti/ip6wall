@@ -1,0 +1,72 @@
+# This file is a part of Ip6wall.
+# Ip6wall is a project of Fabio Borraccetti <miasma@no-net.org>.
+# See Changelog for a list of changes.
+# See COPYRIGHT for copyright infos.
+# See INSTALL for installation infos.
+# See LICENCE for license infos.
+Ip6wall installation Notes
+--------------------------
+
+# ------------------------------ #
+# Netfilter/iptables             #       
+# -------------------------------#
+
+Ip6wall assumes you have a properly working and
+configured netfilter/iptables setup. It does not make
+use of any "special" extensions or patches, but some
+things will not work well unless you are sure they
+are installed (such as the FTP support).
+
+There are case where Ip6wall allows you to make
+use of some of the experimental ip6tables patches,
+but these are not necessary for the default settings. 
+
+Ip6wall DOES NOT attempt to load ip6tables modules for you;
+a properly configured linux system will load modules 
+"as needed".
+
+# ------------------------------ #             
+# Installing                     #             
+# -------------------------------#   
+
+The default configuration assumes everything will
+be installed in /etc/ip6wall.  
+
+Run install.sh if need a standard installation or
+untar to ip6wall-<version> which means you 
+will need to a) move/rename this directory to /etc/ip6wall
+or b) symlink /etc/ip6wall to ip6wall-<version>/
+
+**********************************************************
+** DO NOT attempt to run configure this script remotely **
+**********************************************************
+
+**********************************************************
+** DO NOT run the thing remotely! ************************
+**********************************************************
+
+I recommend installing/configuring the first time locally in case
+something horrible happens-- otherwise, if you make a mistake, you
+will find yourself locked out of your own machine.  I'm not
+kidding.
+
+* NEXT *
+
+Open a terminal. Get out that favorite editor of yours. Edit 
+ip6wall.conf -- it's commented.
+
+* NEXT *
+
+Read the README. It's in the docs directory. 
+
+* NEXT *
+
+Run the script ( /etc/init.d/ip6wall start ) <- assuming you've a debian based system 
+
+I suggest linking this, or setting it up as an automatic process.
+
+Three examples on how to do this. 
+
+PPP -- under Debian, there's a nice directory -> /etc/ppp/ip-up.d/
+
+* That's it *
